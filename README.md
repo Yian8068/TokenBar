@@ -19,7 +19,7 @@ Liquid Glass on macOS 26+.
 | 4 | Overview lens: usage chart, model breakdown, streaks | ✅ |
 | 5 | Remaining lenses: Models / Daily / Hourly / Stats / Agents + tabs | ✅ |
 | 6 | Agent limits + pace + live trace + settings | ✅ |
-| 7 | 3D contribution graph integration | — |
+| 7 | 3D contribution graph integration | ✅ |
 | 8 | Cat animation, shortcuts, autostart | — |
 | 9 | Sparkle updater, signing, packaging, release CI | — |
 | 10 | Bundle-id switch, migration, v1.0.0 | — |
