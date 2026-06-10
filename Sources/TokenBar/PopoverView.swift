@@ -2,28 +2,25 @@ import AppKit
 import SwiftUI
 import TokenBarCore
 
-/// Popover root: loads the dashboard data off the main actor and renders the
-/// Overview lens. Other lenses and per-client tabs arrive in later phases.
+/// Popover root: view-switch row + lens router over a shared DashboardModel.
+/// Per-client tabs join in a later phase.
 struct PopoverView: View {
-    private struct Dashboard {
-        let payload: UsagePayload
-        let stats: UsageStats
-        let modelReport: ModelReport?
-        let colors: ModelColorMap
-    }
-
-    private enum DashboardState {
-        case loading
-        case loaded(Dashboard)
-        case failed(String)
-    }
-
-    @State private var state: DashboardState = .loading
+    @State private var model = DashboardModel()
     @State private var tokensPerMin: Double?
+    @AppStorage("tokenbar.view") private var activeViewRaw = AppView.overview.rawValue
+
+    private var activeView: Binding<AppView> {
+        Binding(
+            get: { AppView(rawValue: activeViewRaw) ?? .overview },
+            set: { activeViewRaw = $0.rawValue })
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             header
+            ViewSwitch(active: activeView)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 10)
             Divider()
             ScrollView {
                 content
@@ -35,7 +32,10 @@ struct PopoverView: View {
         }
         .frame(width: 360, height: 480)
         .background(GlassBackground().ignoresSafeArea())
-        .task { await loadDashboard() }
+        .task { await model.load() }
+        .task(id: activeViewRaw) {
+            await model.ensureData(for: activeView.wrappedValue)
+        }
         .task { await pollTokensPerMin() }
     }
 
@@ -66,7 +66,7 @@ struct PopoverView: View {
     }
 
     @ViewBuilder private var content: some View {
-        switch state {
+        switch model.phase {
         case .loading:
             HStack(spacing: 8) {
                 ProgressView()
@@ -79,18 +79,36 @@ struct PopoverView: View {
             Label(message, systemImage: "exclamationmark.triangle")
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, minHeight: 120)
-        case let .loaded(dashboard):
-            OverviewView(
-                payload: dashboard.payload,
-                stats: dashboard.stats,
-                modelReport: dashboard.modelReport,
-                colors: dashboard.colors)
+        case .ready:
+            lens
+        }
+    }
+
+    /// Lens router. Placeholders are filled in by tasks 5.2–5.6.
+    @ViewBuilder private var lens: some View {
+        if let payload = model.payload, let stats = model.stats {
+            switch activeView.wrappedValue {
+            case .overview:
+                OverviewView(
+                    payload: payload, stats: stats,
+                    modelReport: model.modelReport, colors: model.colors)
+            case .models, .daily, .hourly, .stats, .agents:
+                placeholder(activeView.wrappedValue)
+            }
+        }
+    }
+
+    private func placeholder(_ view: AppView) -> some View {
+        DashCard(view.label) {
+            Text("Coming soon — this lens is being ported.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 
     private var footer: some View {
         HStack {
-            Text("Overview")
+            Text(activeView.wrappedValue.label)
                 .font(.caption)
                 .foregroundStyle(.tertiary)
             Spacer()
@@ -103,30 +121,7 @@ struct PopoverView: View {
         .padding(.vertical, 10)
     }
 
-    // MARK: - Data
-
-    /// TBCore is blocking — hop off the main actor for the FFI calls. The
-    /// model report failing only degrades colors/rows, not the whole view.
-    private func loadDashboard() async {
-        do {
-            async let payloadTask = Task.detached(priority: .userInitiated) {
-                try TBCore.graph()
-            }.value
-            async let reportTask = Task.detached(priority: .userInitiated) {
-                try? TBCore.modelReport()
-            }.value
-            let payload = try await payloadTask
-            let report = await reportTask
-            let stats = UsageStats(
-                payload: payload, selectedClients: Set(payload.summary.clients))
-            state = .loaded(
-                Dashboard(
-                    payload: payload, stats: stats, modelReport: report,
-                    colors: ModelColorMap(report: report)))
-        } catch {
-            state = .failed("Failed to load usage: \(error)")
-        }
-    }
+    // MARK: - Live rate
 
     /// Poll the live rate every 10s while the popover content is on screen;
     /// `.task` cancels this loop when the popover closes.
