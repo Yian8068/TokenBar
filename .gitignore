@@ -3,3 +3,5 @@ target/
 .swiftpm/
 .DS_Store
 *.profraw
+CLAUDE.md
+AGENTS.md
