@@ -52,17 +52,27 @@ struct PopoverView: View {
                 Group {
                     if showSettings {
                         SettingsPanel(agentUsage: model.agentUsage)
+                            // Navigation-push feel: settings slide in from
+                            // the right while the dashboard yields left.
+                            .transition(
+                                .move(edge: .trailing).combined(with: .opacity))
                     } else {
                         content
+                            .transition(
+                                .move(edge: .leading).combined(with: .opacity))
                     }
                 }
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .clipped()
             Divider()
             footer
         }
         .frame(width: 360, height: popoverHeight)
+        .animation(.easeInOut(duration: 0.22), value: showSettings)
+        .animation(.easeOut(duration: 0.16), value: activeViewRaw)
+        .animation(.easeOut(duration: 0.16), value: activeTab)
         .background(GlassBackground().ignoresSafeArea())
         .task { await model.load() }
         .task(id: activeViewRaw) {
@@ -121,8 +131,15 @@ struct PopoverView: View {
     }
 
     /// Lens router. The client tab picks *which* data (clientIds slice), the
-    /// view switch picks *how* it is broken down; the two compose.
+    /// view switch picks *how* it is broken down; the two compose. Switching
+    /// either crossfades with a subtle scale (id swap drives the transition).
     @ViewBuilder private var lens: some View {
+        lensContent
+            .id("\(activeTab)|\(activeViewRaw)")
+            .transition(.opacity.combined(with: .scale(scale: 0.985, anchor: .top)))
+    }
+
+    @ViewBuilder private var lensContent: some View {
         if let payload = model.payload, let stats = model.stats {
             let singleClient = activeTab == "overview" ? nil : activeTab
             let clientIds = singleClient.map { [$0] } ?? stats.presentClients
