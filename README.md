@@ -17,7 +17,7 @@ Liquid Glass on macOS 26+.
 | 2 | SceneKit 3D contribution-graph spike (163 fps, custom orbit rig) | ✅ |
 | 3 | Menu-bar shell: NSStatusItem + popover + Liquid Glass/vibrancy | ✅ |
 | 4 | Overview lens: usage chart, model breakdown, streaks | ✅ |
-| 5 | Remaining lenses: Models / Daily / Hourly / Stats / Agents + tabs | — |
+| 5 | Remaining lenses: Models / Daily / Hourly / Stats / Agents + tabs | ✅ |
 | 6 | Agent limits + pace + live trace + settings | — |
 | 7 | 3D contribution graph integration | — |
 | 8 | Cat animation, shortcuts, autostart | — |
