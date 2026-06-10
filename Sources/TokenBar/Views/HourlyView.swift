@@ -9,6 +9,11 @@ import TokenBarCore
 /// view tree.
 struct HourlyView: View {
     let report: HourlyReport?
+    /// Restrict slots to those involving any of these clients; empty = all.
+    /// Per-slot totals are not split by client, so filtered totals are coarse
+    /// — the view surfaces that caveat.
+    var clientIds: [String] = []
+    var filtered = false
 
     private enum Mode: String {
         case timeline, profile
@@ -28,10 +33,15 @@ struct HourlyView: View {
         var cost = 0.0
     }
 
+    private func allowed(_ e: HourlyReportEntry, _ allow: Set<String>) -> Bool {
+        allow.isEmpty || e.clients.contains { allow.contains($0) }
+    }
+
     /// Profile: fold every slot into a 24-hour-of-day rhythm.
     private var buckets: [HourBucket] {
+        let allow = Set(clientIds)
         var out = (0..<24).map { HourBucket(hour: $0) }
-        for e in report?.entries ?? [] {
+        for e in report?.entries ?? [] where allowed(e, allow) {
             // "YYYY-MM-DD HH:00" → HH
             guard e.hour.count >= 13, let hh = Int(e.hour.dropFirst(11).prefix(2)),
                   (0...23).contains(hh)
@@ -44,8 +54,9 @@ struct HourlyView: View {
 
     /// Timeline: each slot on its own, newest first.
     private var timeline: [HourlyReportEntry] {
-        (report?.entries ?? [])
-            .filter { $0.total > 0 || $0.cost > 0 }
+        let allow = Set(clientIds)
+        return (report?.entries ?? [])
+            .filter { allowed($0, allow) && ($0.total > 0 || $0.cost > 0) }
             .sorted { $0.hour > $1.hour }
     }
 
@@ -69,6 +80,11 @@ struct HourlyView: View {
             subtitle: subtitle(buckets: buckets, timeline: timeline, hasData: hasData),
             trailing: { modeToggle }
         ) {
+            if filtered && hasData {
+                Text("Filtered hours include each slot's full total across agents.")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
             if report == nil {
                 Text("Loading…")
                     .font(.caption)

@@ -8,6 +8,12 @@ struct PopoverView: View {
     @State private var model = DashboardModel()
     @State private var tokensPerMin: Double?
     @AppStorage("tokenbar.view") private var activeViewRaw = AppView.overview.rawValue
+    /// "overview" or a client id. Not persisted, matching the Tauri app.
+    /// `--tab=<id>` preselects a client tab (debug/screenshot aid).
+    @State private var activeTab =
+        CommandLine.arguments
+            .first(where: { $0.hasPrefix("--tab=") })
+            .map { String($0.dropFirst("--tab=".count)) } ?? "overview"
 
     private var activeView: Binding<AppView> {
         Binding(
@@ -18,6 +24,11 @@ struct PopoverView: View {
     var body: some View {
         VStack(spacing: 0) {
             header
+            if let stats = model.stats, stats.presentClients.count > 1 {
+                DashboardTabs(clients: stats.presentClients, active: $activeTab)
+                    .padding(.horizontal, 12)
+                    .padding(.bottom, 8)
+            }
             ViewSwitch(active: activeView)
                 .padding(.horizontal, 12)
                 .padding(.bottom, 10)
@@ -84,26 +95,36 @@ struct PopoverView: View {
         }
     }
 
-    /// Lens router. Placeholders are filled in by tasks 5.2–5.6.
+    /// Lens router. The client tab picks *which* data (clientIds slice), the
+    /// view switch picks *how* it is broken down; the two compose.
     @ViewBuilder private var lens: some View {
         if let payload = model.payload, let stats = model.stats {
+            let singleClient = activeTab == "overview" ? nil : activeTab
+            let clientIds = singleClient.map { [$0] } ?? stats.presentClients
+            let activeStats = singleClient == nil
+                ? stats
+                : UsageStats(payload: payload, selectedClients: Set(clientIds))
             switch activeView.wrappedValue {
             case .overview:
                 OverviewView(
-                    payload: payload, stats: stats,
-                    modelReport: model.modelReport, colors: model.colors)
+                    payload: payload, clientIds: clientIds, stats: activeStats,
+                    modelReport: model.modelReport, colors: model.colors,
+                    singleClient: singleClient)
             case .models:
-                ModelsView(report: model.modelReport, colors: model.colors)
+                ModelsView(
+                    report: model.modelReport, clientIds: clientIds, colors: model.colors)
             case .daily:
-                DailyView(payload: payload, colors: model.colors)
+                DailyView(payload: payload, clientIds: clientIds, colors: model.colors)
             case .hourly:
-                HourlyView(report: model.hourly)
+                HourlyView(
+                    report: model.hourly, clientIds: clientIds,
+                    filtered: singleClient != nil)
             case .stats:
                 StatsView(
-                    payload: payload, stats: stats,
+                    payload: payload, clientIds: clientIds, stats: activeStats,
                     modelReport: model.modelReport, colors: model.colors)
             case .agents:
-                AgentsView(report: model.agents)
+                AgentsView(report: model.agents, clientIds: clientIds)
             }
         }
     }

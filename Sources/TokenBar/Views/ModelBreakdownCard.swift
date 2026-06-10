@@ -7,6 +7,8 @@ import TokenBarCore
 /// everything), while the hover help reports true counts and linear shares.
 struct ModelBreakdownCard: View {
     let report: ModelReport?
+    /// Restrict rows to these clients; empty = show everything.
+    var clientIds: [String] = []
     let colors: ModelColorMap
     var title = "Models"
 
@@ -24,9 +26,10 @@ struct ModelBreakdownCard: View {
     ]
 
     var body: some View {
-        let rows = (report?.entries ?? []).sorted {
-            $0.cost != $1.cost ? $0.cost > $1.cost : $0.total > $1.total
-        }
+        let allow = Set(clientIds)
+        let rows = (report?.entries ?? [])
+            .filter { allow.isEmpty || allow.contains($0.client) }
+            .sorted { $0.cost != $1.cost ? $0.cost > $1.cost : $0.total > $1.total }
         let totalCost = rows.reduce(0) { $0 + $1.cost }
 
         DashCard(

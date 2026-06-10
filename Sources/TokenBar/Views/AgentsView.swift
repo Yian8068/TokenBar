@@ -6,9 +6,13 @@ import TokenBarCore
 /// source clients they ran under, message count, total tokens, and cost.
 struct AgentsView: View {
     let report: AgentsReport?
+    /// Restrict to agents that ran under any of these clients; empty = all.
+    var clientIds: [String] = []
 
     var body: some View {
-        let rows = report?.entries ?? []
+        let allow = Set(clientIds)
+        let rows = (report?.entries ?? [])
+            .filter { allow.isEmpty || $0.clients.contains { allow.contains($0) } }
         let totalCost = rows.reduce(0) { $0 + $1.cost }
         let maxCost = max(rows.map(\.cost).max() ?? 1, 0.000001)
 

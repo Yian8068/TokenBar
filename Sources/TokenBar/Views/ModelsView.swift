@@ -7,6 +7,8 @@ import TokenBarCore
 /// split, and the model's totals with cost in green. No row cap — it scrolls.
 struct ModelsView: View {
     let report: ModelReport?
+    /// Restrict rows to these clients; empty = show everything.
+    var clientIds: [String] = []
     let colors: ModelColorMap
 
     private static let kinds: [(label: String, pick: (ModelReportEntry) -> Int64)] = [
@@ -17,9 +19,10 @@ struct ModelsView: View {
     ]
 
     var body: some View {
-        let rows = (report?.entries ?? []).sorted {
-            $0.cost != $1.cost ? $0.cost > $1.cost : $0.total > $1.total
-        }
+        let allow = Set(clientIds)
+        let rows = (report?.entries ?? [])
+            .filter { allow.isEmpty || allow.contains($0.client) }
+            .sorted { $0.cost != $1.cost ? $0.cost > $1.cost : $0.total > $1.total }
         let totalCost = rows.reduce(0) { $0 + $1.cost }
         let totalTokens = rows.reduce(0) { $0 + $1.total }
 

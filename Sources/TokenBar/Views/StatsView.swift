@@ -6,17 +6,23 @@ import TokenBarCore
 /// distilled from the same stats and model report the other lenses use.
 struct StatsView: View {
     let payload: UsagePayload
+    /// The active tab's client slice.
+    let clientIds: [String]
     let stats: UsageStats
     let modelReport: ModelReport?
     let colors: ModelColorMap
 
     private var favorite: ModelReportEntry? {
-        (modelReport?.entries ?? []).max { $0.cost < $1.cost }
+        let allow = Set(clientIds)
+        return (modelReport?.entries ?? [])
+            .filter { allow.isEmpty || allow.contains($0.client) }
+            .max { $0.cost < $1.cost }
     }
 
     var body: some View {
         VStack(spacing: 12) {
-            UsageChartCard(payload: payload, stats: stats, colors: colors)
+            UsageChartCard(
+                payload: payload, clientIds: clientIds, stats: stats, colors: colors)
             summaryCard
         }
     }

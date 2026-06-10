@@ -7,6 +7,8 @@ import TokenBarCore
 /// scoped to the date.
 struct DailyView: View {
     let payload: UsagePayload
+    /// Restrict to these clients; empty = show everything.
+    var clientIds: [String] = []
     let colors: ModelColorMap
 
     @State private var openDate: String?
@@ -33,11 +35,13 @@ struct DailyView: View {
     }
 
     private var rows: [DayRow] {
-        payload.contributions.compactMap { c -> DayRow? in
+        let allow = Set(clientIds)
+        return payload.contributions.compactMap { c -> DayRow? in
             var tokens: Int64 = 0
             var cost = 0.0
             var messages = 0
             for cc in c.clients {
+                if !allow.isEmpty && !allow.contains(cc.client) { continue }
                 tokens += Self.tokenTotal(cc.tokens)
                 cost += cc.cost
                 messages += cc.messages
@@ -49,8 +53,10 @@ struct DailyView: View {
     }
 
     private func models(for c: Contribution) -> [ModelSlice] {
+        let allow = Set(clientIds)
         var grouped: [String: ModelSlice] = [:]
         for cc in c.clients {
+            if !allow.isEmpty && !allow.contains(cc.client) { continue }
             let tokens = Self.tokenTotal(cc.tokens)
             if tokens <= 0 && cc.cost <= 0 { continue }
             let model = cc.modelId.isEmpty ? "unknown" : cc.modelId

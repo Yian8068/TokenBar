@@ -7,6 +7,8 @@ import TokenBarCore
 /// with the SceneKit graph in a later phase).
 struct UsageChartCard: View {
     let payload: UsagePayload
+    /// Clients included in the stack (the active tab's slice).
+    let clientIds: [String]
     let stats: UsageStats
     let colors: ModelColorMap
 
@@ -23,7 +25,7 @@ struct UsageChartCard: View {
 
     private var bars: [DayBar] {
         DayBars.build(
-            payload: payload, clientIds: stats.presentClients, stackBy: stackBy,
+            payload: payload, clientIds: clientIds, stackBy: stackBy,
             colors: colors, endFallback: Format.todayKey())
     }
 
