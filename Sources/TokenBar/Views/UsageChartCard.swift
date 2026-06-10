@@ -1,10 +1,9 @@
 import SwiftUI
 import TokenBarCore
 
-/// The "Token Usage" card: trailing-30-day stacked bars with Model/Agent
-/// stacking and Tokens/Price metric toggles, a wrapping legend, and a rich
-/// hover tooltip. Port of UsageBarGraph2D.tsx (2D mode; the 3D toggle arrives
-/// with the SceneKit graph in a later phase).
+/// The "Token Usage" card, port of UsageBarGraph2D.tsx: trailing-30-day
+/// stacked bars (Model/Agent stacking, Tokens/Price metric, wrapping legend,
+/// rich hover tooltip) toggling with the full-year 3D contribution grid.
 struct UsageChartCard: View {
     let payload: UsagePayload
     /// Clients included in the stack (the active tab's slice).
@@ -14,6 +13,8 @@ struct UsageChartCard: View {
 
     @AppStorage("tokenbar.chart.stackBy") private var stackByRaw = StackBy.model.rawValue
     @AppStorage("tokenbar.chart.metric") private var metricRaw = ChartMetric.tokens.rawValue
+    /// "2d" = trailing-30-day stacked bars, "3d" = full-year contribution grid.
+    @AppStorage("tokenbar.chart.view") private var chartViewRaw = "2d"
     @State private var hoverIndex: Int?
 
     private static let legendMax = 12
@@ -29,21 +30,36 @@ struct UsageChartCard: View {
             colors: colors, endFallback: Format.todayKey())
     }
 
+    private var is3D: Bool { chartViewRaw == "3d" }
+
     var body: some View {
         let bars = self.bars
         let legend = DayBars.legend(bars: bars, metric: metric)
         DashCard(
             "Token Usage",
-            subtitle: stackBy == .model ? "Stacked by model" : "Stacked by agent",
+            subtitle: is3D
+                ? "Full year"
+                : (stackBy == .model ? "Stacked by model" : "Stacked by agent"),
             trailing: { toggles }
         ) {
             TokenUsageRow(stats: stats)
-            legendView(legend)
-            chart(bars)
-            HStack {
-                axisLabel(bars.first?.date)
-                Spacer()
-                axisLabel(bars.last?.date)
+            if is3D {
+                // Year grid over the same client slice; sized to match the 2D
+                // legend + chart + axis block so the card doesn't jump.
+                ContributionGraph3D(
+                    grid: buildGrid(
+                        year: String(Format.todayKey().prefix(4)),
+                        perDayMap: stats.perDayMap)
+                )
+                .frame(height: 196)
+            } else {
+                legendView(legend)
+                chart(bars)
+                HStack {
+                    axisLabel(bars.first?.date)
+                    Spacer()
+                    axisLabel(bars.last?.date)
+                }
             }
         }
     }
@@ -52,12 +68,17 @@ struct UsageChartCard: View {
 
     private var toggles: some View {
         VStack(alignment: .trailing, spacing: 4) {
-            picker(selection: $stackByRaw, options: [
-                (StackBy.model.rawValue, "Model"), (StackBy.agent.rawValue, "Agent"),
-            ])
-            picker(selection: $metricRaw, options: [
-                (ChartMetric.tokens.rawValue, "Tokens"), (ChartMetric.cost.rawValue, "Price"),
-            ])
+            picker(selection: $chartViewRaw, options: [("2d", "2D"), ("3d", "3D")])
+            // Stacking and bar metric are 2D-only concepts — the 3D view is
+            // the year heatmap (web hides these the same way).
+            if !is3D {
+                picker(selection: $stackByRaw, options: [
+                    (StackBy.model.rawValue, "Model"), (StackBy.agent.rawValue, "Agent"),
+                ])
+                picker(selection: $metricRaw, options: [
+                    (ChartMetric.tokens.rawValue, "Tokens"), (ChartMetric.cost.rawValue, "Price"),
+                ])
+            }
         }
     }
 
