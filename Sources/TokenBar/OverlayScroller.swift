@@ -32,7 +32,7 @@ struct OverlayScrollerEnforcer: NSViewRepresentable {
 
     @MainActor
     final class Coordinator {
-        private var lastFlash = Date.distantPast
+        private var flashedWindow: ObjectIdentifier?
 
         func apply(from view: NSView) {
             var candidate: NSView? = view
@@ -42,10 +42,13 @@ struct OverlayScrollerEnforcer: NSViewRepresentable {
             guard let scroll = candidate as? NSScrollView else { return }
             scroll.scrollerStyle = .overlay
             scroll.autohidesScrollers = true
-            // One flash per popover appearance (updateNSView fires on every
-            // SwiftUI pass — don't strobe).
-            if Date().timeIntervalSince(lastFlash) > 2 {
-                lastFlash = Date()
+            // Flash exactly once per window appearance — updateNSView fires
+            // on every SwiftUI pass (the 10s rate poll alone re-runs it), and
+            // re-flashing kept summoning the scroller back from its fade.
+            guard let window = scroll.window else { return }
+            let identity = ObjectIdentifier(window)
+            if flashedWindow != identity {
+                flashedWindow = identity
                 scroll.flashScrollers()
             }
         }
