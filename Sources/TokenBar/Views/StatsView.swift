@@ -86,6 +86,6 @@ struct StatsView: View {
             }
         }
         .padding(12)
-        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 10))
+        .glassCard()
     }
 }

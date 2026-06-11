@@ -152,7 +152,7 @@ struct SettingsPanel: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
-        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 8))
+        .glassCard(cornerRadius: 8)
     }
 
     private func toggleRow(_ label: String, isOn: Binding<Bool>) -> some View {
@@ -189,7 +189,7 @@ struct SettingsPanel: View {
                 .buttonStyle(.plain)
             }
         }
-        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 8))
+        .glassCard(cornerRadius: 8)
     }
 
     private func hint(_ text: String) -> some View {

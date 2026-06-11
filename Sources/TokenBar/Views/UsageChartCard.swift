@@ -104,12 +104,16 @@ struct UsageChartCard: View {
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
                     .background(
-                        selection.wrappedValue == value ? AnyShapeStyle(.quaternary) : AnyShapeStyle(.clear),
+                        selection.wrappedValue == value
+                            ? AnyShapeStyle(Color.primary.opacity(0.16))
+                            : AnyShapeStyle(.clear),
                         in: RoundedRectangle(cornerRadius: 4))
             }
         }
         .padding(1)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 5))
+        // Plain adaptive fill: these ride *inside* the card's glass, and
+        // nesting glass effects renders as a murky dark blob.
+        .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 6))
     }
 
     // MARK: - Legend

@@ -162,12 +162,12 @@ struct HourlyView: View {
                 .padding(.horizontal, 6)
                 .padding(.vertical, 2)
                 .background(
-                    mode == m ? AnyShapeStyle(.quaternary) : AnyShapeStyle(.clear),
+                    mode == m ? AnyShapeStyle(Color.primary.opacity(0.16)) : AnyShapeStyle(.clear),
                     in: RoundedRectangle(cornerRadius: 4))
             }
         }
         .padding(1)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 5))
+        .background(Color.primary.opacity(0.07), in: RoundedRectangle(cornerRadius: 6))
     }
 
     private func hourRow(

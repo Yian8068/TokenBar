@@ -22,6 +22,6 @@ struct ViewSwitch: View {
             }
         }
         .padding(2)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 8))
+        .glassCard(cornerRadius: 8)
     }
 }

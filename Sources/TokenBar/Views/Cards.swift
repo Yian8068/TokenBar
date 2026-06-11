@@ -7,13 +7,29 @@ import TokenBarCore
 struct GlassCardBackground: ViewModifier {
     var cornerRadius: CGFloat = 10
 
+    @Environment(\.colorScheme) private var colorScheme
+
     func body(content: Content) -> some View {
         if #available(macOS 26.0, *) {
+            // .clear glass lets the wallpaper breathe through the cards
+            // themselves (.regular reads as a dense dark slab when cards
+            // fill the whole scroll area). The tint follows the appearance:
+            // smoked glass in dark mode (a plain white tint washed the dark
+            // theme out), a faint white lift in light mode — the Control
+            // Center pebble look in both.
+            // Smoke layer drawn over the glass (Glass.tint barely moves the
+            // needle on .clear): dark mode gets a deterministic dark scrim,
+            // light mode a faint white lift.
             content
-                .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
+                .background(
+                    colorScheme == .dark
+                        ? Color.black.opacity(0.32)
+                        : Color.white.opacity(0.10),
+                    in: RoundedRectangle(cornerRadius: cornerRadius))
+                .glassEffect(.clear, in: .rect(cornerRadius: cornerRadius))
         } else {
             content
-                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: cornerRadius))
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: cornerRadius))
         }
     }
 }
