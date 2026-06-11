@@ -39,7 +39,7 @@ final class TrayAnimator {
 
     /// PNG frames sorted by name (frame-00 … frame-NN), sized for the bar.
     private static func loadFrames(directory: String) -> [NSImage] {
-        let urls = Bundle.module.urls(
+        let urls = Bundle.tokenBarResources.urls(
             forResourcesWithExtension: "png", subdirectory: directory) ?? []
         return urls
             .sorted { $0.lastPathComponent < $1.lastPathComponent }

@@ -25,7 +25,7 @@ struct AgentIconView: View {
     @MainActor private static func image(_ id: String) -> NSImage? {
         if let cached = cache[id] { return cached }
         guard monoIds.contains(id) || fullIds.contains(id),
-              let url = Bundle.module.url(
+              let url = Bundle.tokenBarResources.url(
                   forResource: id, withExtension: "svg", subdirectory: "agent-icons"),
               let image = NSImage(contentsOf: url)
         else { return nil }
