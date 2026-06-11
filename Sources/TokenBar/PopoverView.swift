@@ -90,8 +90,8 @@ struct PopoverView: View {
 
     private var header: some View {
         HStack {
-            Image(systemName: "chart.bar.fill")
-                .foregroundStyle(.secondary)
+            BrandMark()
+                .frame(width: 19, height: 19)
             Text("TokenBar")
                 .font(.headline)
             Spacer()
