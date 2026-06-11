@@ -1,4 +1,4 @@
-import Foundation
+import AppKit
 
 /// One-shot import of settings from the retired beta identity
 /// (com.nyanako.tokenbar.beta, "TokenBar Beta.app"). Runs before anything
@@ -28,6 +28,44 @@ enum BetaMigration {
         }
         if copied > 0 {
             NSLog("TokenBar: imported \(copied) settings from the beta app")
+        }
+    }
+}
+
+/// The retired beta app (com.nyanako.tokenbar.beta) can't auto-update across
+/// to the stable identity (com.nyanako.tokenbar) — Sparkle refuses to install
+/// over a different bundle id. So the final beta build (a 1.0+ version still
+/// carrying the .beta id) ships this bridge: it's the full 1.0 app, plus a
+/// one-tap "switch to the release build" that runs the Homebrew cask install
+/// (which lays down the stable app, handles Gatekeeper, and whose first launch
+/// imports these very settings via BetaMigration) and quits the beta.
+enum BridgeBuild {
+    static let installCommand = "brew install --cask nanako0129/tokenbar/tokenbar"
+
+    /// True when running as a 1.0+ build that still carries the beta id —
+    /// i.e. a beta-channel install that should graduate to the release app.
+    static var isActive: Bool {
+        guard Bundle.main.bundleIdentifier == "com.nyanako.tokenbar.beta" else { return false }
+        let v = AppInfo.version
+        // Any 1.x or higher on the beta id is the graduation build; betas are
+        // "1.0.0-beta.N", which sort below "1.0.0" but still start with "1.".
+        return !v.hasPrefix("0.") && !v.contains("-beta")
+    }
+
+    /// Run the cask install in Terminal, then quit so the freshly-installed
+    /// release app (same data dir, settings imported on first launch) takes
+    /// over. Beta installs always have Homebrew — that's how they got here.
+    static func switchToRelease() {
+        let script = """
+        tell application "Terminal"
+            activate
+            do script "\(installCommand) && osascript -e 'quit app \\"TokenBar Beta\\"'"
+        end tell
+        """
+        if let apple = NSAppleScript(source: script) {
+            var err: NSDictionary?
+            apple.executeAndReturnError(&err)
+            if let err { NSLog("TokenBar bridge: AppleScript failed: \(err)") }
         }
     }
 }

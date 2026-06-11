@@ -35,6 +35,9 @@ struct PopoverView: View {
     var body: some View {
         VStack(spacing: 0) {
             header
+            if BridgeBuild.isActive {
+                bridgeBanner
+            }
             if !showSettings {
                 if let stats = model.stats, stats.presentClients.count > 1 {
                     DashboardTabs(
@@ -100,6 +103,29 @@ struct PopoverView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+    }
+
+    /// Shown only on the final beta build (1.0 on the .beta id): one tap runs
+    /// the cask install that graduates this install to the release app.
+    private var bridgeBanner: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "arrow.up.forward.app.fill")
+                .foregroundStyle(.tint)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("You're on the beta build")
+                    .font(.caption.weight(.semibold))
+                Text("Switch to the TokenBar 1.0 release — keeps your data")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button("Switch") { BridgeBuild.switchToRelease() }
+                .controlSize(.small)
+                .buttonStyle(.borderedProminent)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(Color.primary.opacity(0.06))
     }
 
     /// Manual refresh (also ⌘R): forces a full log re-read.
