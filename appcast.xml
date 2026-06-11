@@ -4,8 +4,8 @@
     <title>TokenBar updates</title>
     <item>
       <title>1.0.0</title>
-      <pubDate>Thu, 11 Jun 2026 15:00:02 +0000</pubDate>
-      <sparkle:version>64</sparkle:version>
+      <pubDate>Thu, 11 Jun 2026 15:17:00 +0000</pubDate>
+      <sparkle:version>65</sparkle:version>
       <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
 
@@ -19,8 +19,8 @@
       ]]></description>
       <enclosure
         url="https://github.com/Nanako0129/TokenBar/releases/download/v1.0.0-bridge/TokenBar-Beta.app.tar.gz"
-        sparkle:edSignature="A6rwlWKXw1uWvNeYnHQXRIiTrKwK4QuWXG4fHb2LYaKiTJfKP4qXpqyd04Xie74FQhq0EWQbu2mAemQmcwJGDA=="
-        length="6532768"
+        sparkle:edSignature="vuX5YUCdxY9OuTZ0hTJBGupDJ4fN6n456d+eMSTOUoMCFElA8l5Q2Tl4v68wIQk0xDeCk807WEOzOlIkPXVnBg=="
+        length="6536128"
         type="application/octet-stream"/>
     </item>
   </channel>
