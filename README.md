@@ -42,19 +42,18 @@ broken down — six lenses, plus the same year of usage as an orbitable 3D graph
 
 <table>
   <tr>
-    <td align="center"><img src="docs/screenshots/models.png" alt="Models view" width="270"><br><sub><b>Models</b> — by cost</sub></td>
-    <td align="center"><img src="docs/screenshots/daily.png" alt="Daily view" width="270"><br><sub><b>Daily</b> — with day drill-down</sub></td>
-    <td align="center"><img src="docs/screenshots/hourly.png" alt="Hourly view" width="270"><br><sub><b>Hourly</b> — 24-hour rhythm</sub></td>
+    <td align="center" width="50%"><img src="docs/screenshots/models.png" alt="Models view" width="300"><br><sub><b>Models</b> — every model ranked by cost</sub></td>
+    <td align="center" width="50%"><img src="docs/screenshots/daily.png" alt="Daily view" width="300"><br><sub><b>Daily</b> — active days, with day drill-down</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/stats.png" alt="Stats view" width="270"><br><sub><b>Stats</b> — headline summary</sub></td>
-    <td align="center"><img src="docs/screenshots/agents.png" alt="Agents view" width="270"><br><sub><b>Agents</b> — sub-agents by cost</sub></td>
-    <td align="center"><sub>OAuth quota cards with <b>pace</b> projections · live session trace · streaks · keyboard-driven (⌘1–9, ⌘G, ⌘,)</sub></td>
+    <td align="center" width="50%"><img src="docs/screenshots/hourly.png" alt="Hourly view" width="300"><br><sub><b>Hourly</b> — when in the day you burn tokens</sub></td>
+    <td align="center" width="50%"><img src="docs/screenshots/stats.png" alt="Stats view" width="300"><br><sub><b>Stats</b> — headline summary &amp; streaks</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="50%"><img src="docs/screenshots/agents.png" alt="Agents view" width="300"><br><sub><b>Agents</b> — sub-agents ranked by cost</sub></td>
+    <td align="center" width="50%"><sub>Plus <b>OAuth quota cards</b> with pace projections, a live session trace, streaks, and full keyboard control (⌘1–9 tabs, ⌘G chart toggle, ⌘, settings).<br><br>A failed refresh never blanks a reading — the last known value stays until a fresh one lands.</sub></td>
   </tr>
 </table>
-
-A failed refresh never blanks a reading — the last known value stays until a
-fresh one lands.
 
 ## Install
 
