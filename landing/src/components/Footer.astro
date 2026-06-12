@@ -9,7 +9,7 @@ const repo = 'https://github.com/Nanako0129/TokenBar'
 <footer class="footer">
   <div class="container foot-inner">
     <div class="foot-brand">
-      <a class="wordmark" href="#top"><span class="dot" aria-hidden="true"></span>TokenBar</a>
+      <a class="wordmark" href="#top"><img class="appicon" src={`${base}favicon.png`} alt="" width="22" height="22" />TokenBar</a>
       <p>{c.tagline}</p>
     </div>
     <nav class="foot-links">
@@ -29,7 +29,7 @@ const repo = 'https://github.com/Nanako0129/TokenBar'
   .footer { border-top: 1px solid var(--line); padding: 56px 0 40px; margin-top: 40px; }
   .foot-inner { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
   .foot-brand .wordmark { font-family: var(--font-display); font-weight: 800; font-size: 19px; display: inline-flex; align-items: center; gap: 9px; }
-  .foot-brand .dot { width: 11px; height: 11px; border-radius: 3px; background: linear-gradient(135deg, var(--accent-bright), var(--accent-deep)); }
+  .foot-brand .appicon { width: 22px; height: 22px; display: block; }
   .foot-brand p { color: var(--muted); font-size: 14px; margin-top: 10px; max-width: 34ch; }
   .foot-links { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; }
   .foot-links a { color: var(--muted); transition: color .15s; }

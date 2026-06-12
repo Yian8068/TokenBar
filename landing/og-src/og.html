@@ -65,10 +65,9 @@
     font-size: 104px; letter-spacing: -0.03em; line-height: 1;
     display: flex; align-items: center; gap: 26px;
   }
-  .wordmark .dot {
-    width: 58px; height: 58px; border-radius: 16px; flex: 0 0 auto;
-    background: linear-gradient(135deg, #9b8cff, #5b46d6);
-    box-shadow: 0 0 48px -4px #7c6cff;
+  .wordmark img {
+    width: 112px; height: 112px; flex: 0 0 auto; display: block;
+    filter: drop-shadow(0 0 40px rgba(124, 108, 255, 0.55));
   }
   .tagline {
     margin-top: 30px; font-size: 37px; font-weight: 500; color: #d6d4e4;
@@ -107,7 +106,7 @@
   <img class="pop" src="../public/screenshots/native/popover-hero.png" alt="" />
 
   <div class="copy">
-    <div class="wordmark"><span class="dot"></span>TokenBar</div>
+    <div class="wordmark"><img src="../public/favicon.png" alt="" />TokenBar</div>
     <p class="tagline">Know every AI token you <span class="hot">burn</span>.</p>
     <p class="sub">Claude Code · Codex · Cursor · 25+ agents, read from local logs</p>
     <div class="pills">
