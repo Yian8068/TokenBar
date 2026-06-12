@@ -3,24 +3,46 @@
   <channel>
     <title>TokenBar updates</title>
     <item>
-      <title>1.0.0</title>
-      <pubDate>Thu, 11 Jun 2026 15:33:37 +0000</pubDate>
-      <sparkle:version>66</sparkle:version>
-      <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
+      <title>1.0.2</title>
+      <pubDate>Fri, 12 Jun 2026 16:47:06 +0000</pubDate>
+      <sparkle:version>103</sparkle:version>
+      <sparkle:shortVersionString>1.0.2</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
 
-      <link>https://github.com/Nanako0129/TokenBar/releases/tag/v1.0.0-bridge</link>
+      <link>https://github.com/Nanako0129/TokenBar/releases/tag/v1.0.2</link>
       <description><![CDATA[
 <b>New:</b>
 <ul>
-<li>This moves you from the beta app to TokenBar 1.0.</li>
-<li>A Switch button appears in the popover — click it to install the release build (your data and settings carry over).</li>
+<li>Bring back the year filter from the Tauri HeaderBar</li>
+<li>Aurora wallpaper + liquid-glass design system</li>
+<li>Menu-bar nav + popover hero orchestration</li>
+<li>Glass panels everywhere + v1.x copy + melting popsicle</li>
+<li>/zh-tw/ locale + hreflang</li>
+<li>1200x630 OG brand card + JSON-LD/llms.txt refresh</li>
+<li>Oiiai cat + Party Parrot join the critter band</li>
+<li>Og-card v2 with real popover + sharper title/description</li>
+<li>Real app icon beside the TokenBar wordmark</li>
+<li>FAQPage JSON-LD, sitemap hreflang, self-hosted fonts</li>
+<li>Standalone settings window with live preview column</li>
+<li>Credit contributors in AI release notes</li>
 </ul>
+<b>Fixes:</b>
+<ul>
+<li>Let the brew command wrap inside a 350px column</li>
+<li>App-icon favicon, straighten 3D card, 2x hero popover</li>
+<li>Drop the Apple logo glyph from menu-bar mocks</li>
+<li>Drive the popsicle melt with JavaScript — WebKit lacks CSS d:path()</li>
+<li>Waifu2x upscale for the hero popover — crisper text</li>
+<li>Open the settings window dead-center on screen</li>
+<li>Never mtime-prune Hermes/Zed dbs; probe their -wal sidecars</li>
+<li>Stop re-reading and re-aggregating unchanged session history</li>
+</ul>
+<p>Thanks: @aiexkwan</p>
       ]]></description>
       <enclosure
-        url="https://github.com/Nanako0129/TokenBar/releases/download/v1.0.0-bridge/TokenBar-Beta.app.tar.gz"
-        sparkle:edSignature="4pkxSDd0Xy/lJdoZ3agODgpQctdclhtjIG8nFwVIlBav2RR0sFh4pJbTV/ngr/aJNBGBLcrReYbEglOojyZjBw=="
-        length="6538668"
+        url="https://github.com/Nanako0129/TokenBar/releases/download/v1.0.2/TokenBar.app.tar.gz"
+        sparkle:edSignature="NCuCR9wuvOcPbGacYTsMnacwLZjQ9BDwMB1p2xcVOfCr96mKdZ0Be0MbyECjD54QfcVU66SJDzkHYs98ZXlJCA=="
+        length="6664853"
         type="application/octet-stream"/>
     </item>
   </channel>
