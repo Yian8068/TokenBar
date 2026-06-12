@@ -1,53 +1,54 @@
 ---
 import Heatmap from './Heatmap.astro'
+const base = import.meta.env.BASE_URL
 const brew = 'brew install --cask nanako0129/tokenbar/tokenbar'
 const repo = 'https://github.com/Nanako0129/TokenBar'
 ---
 
-<header class="nav">
-  <div class="container nav-inner">
-    <a class="wordmark" href="#top">
-      <span class="dot" aria-hidden="true"></span>TokenBar
-    </a>
-    <nav class="links">
-      <a href="#native">Native</a>
-      <a href="#views">Dashboard</a>
-      <a href="#privacy">Privacy</a>
-      <a href="#install">Install</a>
-      <a href={repo} class="gh">GitHub ↗</a>
-    </nav>
-  </div>
-</header>
-
 <section class="hero" id="top">
   <Heatmap />
   <div class="container hero-inner">
-    <p class="eyebrow rise" style="animation-delay:.05s">Local-first · Native macOS menu bar</p>
-    <h1 class="rise" style="animation-delay:.12s">
-      Know every AI<br />token you <span class="hot">burn</span>.
-    </h1>
-    <p class="lede rise" style="animation-delay:.2s">
-      TokenBar reads your AI coding logs on-device and lays your spend bare across
-      <strong>25+ agents</strong> — Claude Code, Codex, Cursor, OpenCode and more.
-      Now a <strong>native Swift app</strong> with Liquid Glass.
-      No telemetry. No account. Just the numbers.
-    </p>
+    <div class="hero-copy">
+      <p class="eyebrow rise" style="animation-delay:.85s">Local-first · Native macOS menu bar</p>
+      <h1 class="rise" style="animation-delay:.92s">
+        Know every AI<br />token you <span class="hot">burn</span>.
+      </h1>
+      <p class="lede rise" style="animation-delay:1s">
+        TokenBar reads your AI coding logs on-device and lays your spend bare
+        across <strong>25+ agents</strong> — Claude Code, Codex, Cursor, OpenCode
+        and more. Native Swift, dressed in Liquid Glass. No telemetry, no
+        account. Just the numbers.
+      </p>
 
-    <div class="cta rise" style="animation-delay:.28s">
-      <button class="brew" id="brew" type="button" title="Copy install command">
-        <span class="prompt">$</span>
-        <code>{brew}</code>
-        <span class="copy" aria-hidden="true">copy</span>
-      </button>
-      <a class="btn btn-ghost" href={repo}>View on GitHub</a>
+      <div class="cta rise" style="animation-delay:1.08s">
+        <button class="brew" id="brew" type="button" title="Copy install command">
+          <span class="prompt">$</span>
+          <code>{brew}</code>
+          <span class="copy" aria-hidden="true">copy</span>
+        </button>
+        <a class="btn btn-ghost" href={repo}>View on GitHub</a>
+      </div>
+
+      <p class="statline mono rise" style="animation-delay:1.16s">
+        25+ agents · 6 lenses · 160 fps 3D · 0 telemetry
+      </p>
     </div>
 
-    <dl class="stats rise" style="animation-delay:.36s">
-      <div><dt class="mono">25+</dt><dd>agents tracked</dd></div>
-      <div><dt class="mono">6</dt><dd>dashboard views</dd></div>
-      <div><dt class="mono">160fps</dt><dd>3D contribution graph</dd></div>
-      <div><dt class="mono">0</dt><dd>telemetry, accounts</dd></div>
-    </dl>
+    <div class="hero-pop" aria-hidden="false">
+      <!-- mirrors the NSPopover open: springs out of the status item above -->
+      <div class="pop-shell">
+        <div class="pop-float">
+          <img
+            class="pop-img"
+            src={`${base}screenshots/native/popover-hero.png`}
+            alt="The TokenBar popover: token usage dashboard with agent limits and live pace"
+            width="365"
+            height="849"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -70,34 +71,26 @@ const repo = 'https://github.com/Nanako0129/TokenBar'
 </script>
 
 <style>
-  .nav { position: absolute; top: 0; left: 0; right: 0; z-index: 5; padding-top: 22px; }
-  .nav-inner { display: flex; align-items: center; justify-content: space-between; }
-  .wordmark {
-    font-family: var(--font-display); font-weight: 800; font-size: 20px;
-    letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 9px;
-  }
-  .wordmark .dot {
-    width: 12px; height: 12px; border-radius: 3px;
-    background: linear-gradient(135deg, var(--accent-bright), var(--accent-deep));
-    box-shadow: 0 0 12px -1px var(--accent);
-  }
-  .links { display: flex; align-items: center; gap: 26px; font-size: 14px; font-weight: 500; color: var(--muted); }
-  .links a { transition: color .15s; }
-  .links a:hover { color: var(--ink); }
-  .links .gh { font-family: var(--font-mono); color: var(--ink-dim); }
-  @media (max-width: 640px) { .links a:not(.gh) { display: none; } }
-
   .hero {
     position: relative;
-    min-height: clamp(620px, 92vh, 940px);
+    /* popover column hugs the menu bar, like a real NSPopover */
+    padding-top: calc(var(--menubar-h) + 14px);
+    min-height: clamp(620px, 90vh, 980px);
     display: grid;
     align-items: center;
-    overflow: hidden;
   }
-  .hero-inner { position: relative; z-index: 2; text-align: center; padding: 90px 0 40px; }
+  .hero-inner {
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: 1.05fr minmax(280px, 380px);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+  }
+
+  .hero-copy { text-align: left; padding: clamp(28px, 6vh, 72px) 0 6vh; }
   .hero h1 {
-    font-size: clamp(46px, 9.2vw, 116px);
-    margin: 16px auto 0;
+    font-size: clamp(44px, 6.6vw, 92px);
+    margin: 16px 0 0;
     text-wrap: balance;
   }
   .hero h1 .hot {
@@ -105,37 +98,80 @@ const repo = 'https://github.com/Nanako0129/TokenBar'
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
   .lede {
-    max-width: 620px; margin: 24px auto 0;
-    color: var(--ink-dim); font-size: clamp(17px, 2.2vw, 21px);
+    max-width: 560px; margin: 24px 0 0;
+    color: var(--ink-dim); font-size: clamp(17px, 2vw, 20px);
   }
   .lede strong { color: var(--ink); font-weight: 600; }
 
-  .cta { margin: 38px auto 0; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; align-items: center; }
+  .cta { margin: 36px 0 0; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
   .brew {
     display: inline-flex; align-items: center; gap: 12px;
     font-family: var(--font-mono); font-size: 14px;
     padding: 12px 14px 12px 16px; border-radius: 999px;
-    background: color-mix(in oklab, var(--panel) 80%, transparent);
+    background: color-mix(in oklab, var(--glass-scrim) 80%, transparent);
     border: 1px solid var(--line-strong); color: var(--ink-dim);
-    cursor: pointer; backdrop-filter: blur(8px);
+    cursor: pointer;
+    -webkit-backdrop-filter: blur(10px) saturate(1.3);
+    backdrop-filter: blur(10px) saturate(1.3);
     transition: border-color .18s, transform .18s;
   }
   .brew:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .brew .prompt { color: var(--accent); }
+  .brew .prompt { color: var(--accent-bright); }
   .brew code { color: var(--ink); }
   .brew .copy {
     font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
     color: var(--faint); border-left: 1px solid var(--line-strong); padding-left: 12px;
   }
-  .brew.done .copy { color: var(--p-google); }
+  .brew.done .copy { color: var(--gauge-ok); }
   @media (max-width: 560px) { .brew { font-size: 12px; } .brew code { font-size: 11px; } }
 
-  .stats {
-    margin: 54px auto 0; max-width: 720px;
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
-    border-top: 1px solid var(--line); padding-top: 26px;
+  .statline {
+    margin-top: 40px; font-size: 13px; letter-spacing: .04em;
+    color: var(--muted);
+    border-top: 1px solid var(--line); padding-top: 20px;
+    max-width: 560px;
   }
-  .stats dt { font-size: clamp(22px, 3.4vw, 34px); font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
-  .stats dd { color: var(--muted); font-size: 13px; margin-top: 4px; }
-  @media (max-width: 620px) { .stats { grid-template-columns: repeat(2, 1fr); gap: 22px 12px; } }
+
+  /* --- the popover ------------------------------------------------------ */
+  .hero-pop {
+    position: relative; z-index: 3;
+    /* the bottom edge deliberately presses into the next section */
+    margin-bottom: clamp(-170px, -12vw, -70px);
+    align-self: start;
+  }
+  .pop-shell {
+    /* springs from the status item pinned above in the menu bar */
+    transform-origin: calc(100% - 52px) -18px;
+    animation: popIn .72s cubic-bezier(.34, 1.2, .44, 1) .55s backwards;
+  }
+  @keyframes popIn {
+    0% { opacity: 0; transform: scale(.1) translateY(-10px); }
+    58% { opacity: 1; transform: scale(1.03) translateY(0); }
+    80% { transform: scale(.994); }
+    100% { transform: scale(1); }
+  }
+  .pop-float { animation: popDrift 9s ease-in-out 2.2s infinite alternate; }
+  @keyframes popDrift {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+  }
+  .pop-img {
+    display: block; width: 100%; height: auto;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+      0 60px 130px -45px rgba(0, 0, 0, 0.85),
+      0 24px 60px -30px color-mix(in oklab, var(--accent-deep) 55%, transparent);
+  }
+
+  @media (max-width: 880px) {
+    .hero { padding-top: calc(var(--menubar-h) + 36px); }
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-copy { padding-bottom: 0; }
+    .hero-pop {
+      margin: 12px auto -64px;
+      width: min(75vw, 330px);
+    }
+    .pop-shell { transform-origin: 80% -20px; }
+  }
 </style>

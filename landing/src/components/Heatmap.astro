@@ -48,9 +48,10 @@ for (let c = 0; c < COLS; c++) {
     display: grid;
     place-items: center;
     overflow: hidden;
-    /* fade the grid out toward the edges/bottom so hero text stays legible */
-    -webkit-mask-image: radial-gradient(130% 115% at 50% 32%, #000 38%, transparent 82%);
-    mask-image: radial-gradient(130% 115% at 50% 32%, #000 38%, transparent 82%);
+    /* ambience now, not the lead: bias toward the popover side and fade
+       hard around the copy so the glass panel stays the protagonist */
+    -webkit-mask-image: radial-gradient(120% 110% at 66% 30%, #000 26%, transparent 76%);
+    mask-image: radial-gradient(120% 110% at 66% 30%, #000 26%, transparent 76%);
   }
   .grid {
     display: grid;
@@ -60,7 +61,7 @@ for (let c = 0; c < COLS; c++) {
     width: 1240px;
     max-width: none;
     transform: translateY(-4%) rotate(-0.0001deg);
-    opacity: 0.9;
+    opacity: 0.5;
   }
   .cell {
     aspect-ratio: 1;

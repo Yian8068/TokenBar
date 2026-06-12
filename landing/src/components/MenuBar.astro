@@ -1,0 +1,115 @@
+---
+// The site nav dressed as a real macOS menu bar: a 30px glass strip pinned to
+// the top. Left side reads like the frontmost app's menus (anchor links in
+// disguise); right side is a faithful status item — the staircase-bars brand
+// icon plus a mono token counter that drifts like the live tray title.
+const repo = 'https://github.com/Nanako0129/TokenBar'
+---
+
+<header class="menubar" id="menubar">
+  <div class="mb-inner">
+    <span class="mb-apple" aria-hidden="true">
+      <svg viewBox="0 0 384 512">
+        <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
+      </svg>
+    </span>
+    <a class="mb-app" href="#top">TokenBar</a>
+    <nav class="mb-menus" aria-label="Site">
+      <a href="#native">About</a>
+      <a href="#views">Views</a>
+      <a href="#quota">Menu Bar</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#install">Install</a>
+    </nav>
+    <span class="mb-spacer"></span>
+    <a class="mb-gh mono" href={repo}>GitHub ↗</a>
+    <span class="mb-status" id="mb-status" title="TokenBar lives right here">
+      <svg class="mb-icon" viewBox="0 0 16 16" aria-hidden="true">
+        <!-- staircase bars, mirrors TrayIcons.drawBars on its 16-grid -->
+        <rect x="0" y="10" width="3" height="5" rx="1.2" />
+        <rect x="4" y="7" width="3" height="8" rx="1.2" />
+        <rect x="8" y="4" width="3" height="11" rx="1.2" />
+        <rect x="12" y="1" width="3" height="14" rx="1.2" />
+      </svg>
+      <span class="mb-count mono" id="mb-count" aria-hidden="true">612K tok/min</span>
+    </span>
+  </div>
+</header>
+
+<script is:inline>
+  // the status-item counter drifts like the real tray title; hovering it
+  // makes the meter race (someone is clearly mid-refactor)
+  (() => {
+    const el = document.getElementById('mb-count')
+    const status = document.getElementById('mb-status')
+    if (!el || !status) return
+    let v = 480 + Math.random() * 380 // K tok/min
+    let hot = false
+    const fmt = () => {
+      el.textContent = v < 1000 ? `${Math.round(v)}K tok/min` : `${(v / 1000).toFixed(1)}M tok/min`
+    }
+    const tick = () => {
+      const drift = hot ? (Math.random() - 0.18) * 320 : (Math.random() - 0.47) * 90
+      v = Math.min(9800, Math.max(64, v + drift))
+      fmt()
+      setTimeout(tick, hot ? 220 : 1600 + Math.random() * 900)
+    }
+    status.addEventListener('mouseenter', () => { hot = true })
+    status.addEventListener('mouseleave', () => { hot = false })
+    fmt()
+    setTimeout(tick, 1500)
+  })()
+</script>
+
+<style>
+  .menubar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    height: var(--menubar-h);
+    background: color-mix(in oklab, var(--glass-scrim) 88%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+    box-shadow: inset 0 1px 0 var(--glass-sheen);
+    animation: mbDrop .5s cubic-bezier(.22,.61,.36,1) backwards;
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .menubar { background: var(--panel); }
+  }
+  @keyframes mbDrop { from { transform: translateY(-100%); } }
+
+  .mb-inner {
+    width: min(100% - 32px, calc(var(--maxw) + 40px));
+    margin-inline: auto; height: 100%;
+    display: flex; align-items: center; gap: 18px;
+    font-size: 13px;
+  }
+  .mb-apple { display: inline-flex; align-items: center; }
+  .mb-apple svg { width: 12px; height: 14px; fill: var(--ink); opacity: .9; }
+  .mb-app {
+    font-weight: 700; color: var(--ink); letter-spacing: -0.01em;
+    font-family: var(--font-body);
+  }
+  .mb-menus { display: inline-flex; align-items: center; gap: 18px; color: var(--ink-dim); }
+  .mb-menus a, .mb-gh { padding: 2px 7px; border-radius: 5px; transition: background .15s, color .15s; }
+  .mb-menus a:hover, .mb-gh:hover { background: color-mix(in oklab, var(--ink) 12%, transparent); color: var(--ink); }
+  .mb-spacer { flex: 1; }
+  .mb-gh { font-size: 12px; color: var(--ink-dim); }
+
+  .mb-status {
+    display: inline-flex; align-items: center; gap: 7px;
+    height: 22px; padding: 0 8px; border-radius: 5px;
+    /* stays highlighted, like a status item whose popover is open */
+    background: color-mix(in oklab, var(--accent) 26%, transparent);
+    animation: mbLight .4s ease .5s backwards;
+  }
+  @keyframes mbLight { from { background: transparent; } }
+  .mb-icon { width: 13px; height: 13px; fill: var(--ink); }
+  .mb-count { font-size: 11.5px; color: var(--ink); white-space: nowrap; min-width: 86px; text-align: right; }
+
+  @media (max-width: 760px) {
+    .mb-menus, .mb-gh { display: none; }
+  }
+  @media (max-width: 420px) {
+    .mb-apple { display: none; }
+  }
+</style>
