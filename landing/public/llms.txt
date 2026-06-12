@@ -20,7 +20,7 @@
 - Agents: sub-agents ranked by cost with source apps, message count, and tokens.
 
 ## Menu bar
-- The status item shows live token throughput (the spinning tokcat cat) or a subscription-quota gauge: signal bars, a ring, or a popsicle that melts as the five-hour window drains, with battery-style warning colors.
+- The status item shows live token throughput (the spinning tokcat cat, the oiiai spinning cat, or Party Parrot) or a subscription-quota gauge: signal bars, a ring, or a popsicle that melts as the five-hour window drains, with battery-style warning colors.
 
 ## Updates
 - In-app updates over a signed Sparkle (EdDSA) feed; release notes are summarized from the actual commits. Beta builds are a Settings toggle, not a separate install.

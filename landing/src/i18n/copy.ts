@@ -64,6 +64,7 @@ const en = {
     body: "Your token throughput as a single glanceable critter: idle when nothing's flowing, whirling when Claude Code is mid-refactor. One look at the menu bar tells you how fast the meter is running — no window required.",
     credit:
       'The spinning cat is the signature creative touch of the original <a href="https://github.com/handlecusion/tokcat">tokcat</a> by <strong>handlecusion</strong> — kept here with gratitude. The running menu-bar pet itself began with <a href="https://kyome.io/runcat/">RunCat</a> by <strong>Takuto Nakamura</strong>.',
+    crittersNote: 'also on the roster — hover to feed them tokens',
     gifAlt: "The TokenBar menu-bar cat spinning beside today's cost",
   },
   quota: {
@@ -272,6 +273,7 @@ const zhTw: typeof en = {
     body: '你的 token 吞吐量濃縮成選單列上一隻一眼可讀的小生物：沒事時發呆，Claude Code 重構到一半時狂奔。瞄一眼選單列就知道錶轉多快——不用開任何視窗。',
     credit:
       '奔跑的貓是原版 <a href="https://github.com/handlecusion/tokcat">tokcat</a>（<strong>handlecusion</strong>）的招牌創意，這裡心懷感激地保留。而選單列奔跑寵物的始祖，是 <strong>Takuto Nakamura</strong> 的 <a href="https://kyome.io/runcat/">RunCat</a>。',
+    crittersNote: '陣容裡還有這兩位——滑過去餵牠們一點 token',
     gifAlt: 'TokenBar 選單列的貓在今日花費旁奔跑',
   },
   quota: {
