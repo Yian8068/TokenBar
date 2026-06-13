@@ -83,7 +83,7 @@ const en = {
     eyebrow: 'One popover, six lenses',
     h2: 'App tabs filter who. The view switch picks how.',
     intro:
-      'Pick which agents you’re looking at, then choose how to break them down — a multi-view dashboard inspired by <a class="ilink" href="https://github.com/junhoyeo/tokscale">tokscale</a>’s TUI.',
+      'Pick which agents you’re looking at, then choose how to break them down — a multi-view dashboard modeled on <a class="ilink" href="https://github.com/junhoyeo/tokscale">tokscale</a>’s TUI, lenses and columns and all.',
     altPrefix: (name: string) => `TokenBar ${name} view`,
     items: [
       { name: 'Overview', desc: 'The whole picture — contribution chart, agent limits with pace, live session, model breakdown, streaks.' },
@@ -177,18 +177,18 @@ const en = {
     go: 'View on GitHub ↗',
     items: [
       {
-        name: 'tokcat',
-        who: 'by handlecusion',
-        href: 'https://github.com/handlecusion/tokcat',
-        body: 'The original macOS menu-bar token monitor TokenBar is forked from. The Tauri shell, native tray, and the spinning menu-bar cat all originate here.',
-        accent: '--p-anthropic',
-      },
-      {
         name: 'tokscale',
         who: 'by Junho Yeo',
         href: 'https://github.com/junhoyeo/tokscale',
-        body: 'Its tokscale-core crate powers TokenBar’s multi-agent session parsing, dedup, and pricing. The multi-view dashboard is inspired by tokscale’s TUI.',
+        body: 'The foundation. Its vendored tokscale-core crate drives TokenBar’s session parsing, dedup, and pricing across 25+ agents — and its interactive TUI is the blueprint for the whole dashboard: the six lenses and their In · Out · CR · CW column breakdown.',
         accent: '--p-deepseek',
+      },
+      {
+        name: 'tokcat',
+        who: 'by handlecusion',
+        href: 'https://github.com/handlecusion/tokcat',
+        body: 'Where TokenBar’s product line began — the original Tauri menu-bar monitor (itself built on tokscale). The native app is a ground-up Swift rewrite that carries no tokcat code, but the menu-bar form and the spinning-cat signature are theirs.',
+        accent: '--p-anthropic',
       },
       {
         name: 'RunCat',
@@ -292,7 +292,7 @@ const zhTw: typeof en = {
     eyebrow: '一個 popover，六種透鏡',
     h2: 'App 分頁選「看誰」，視圖切換選「怎麼看」。',
     intro:
-      '先挑要看的 agent，再選拆解方式——多視圖儀表板的靈感來自 <a class="ilink" href="https://github.com/junhoyeo/tokscale">tokscale</a> 的 TUI。',
+      '先挑要看的 agent，再選拆解方式——多視圖儀表板的版面，連透鏡與欄位都照著 <a class="ilink" href="https://github.com/junhoyeo/tokscale">tokscale</a> 的 TUI 來設計。',
     altPrefix: (name: string) => `TokenBar ${name} 視圖`,
     items: [
       { name: 'Overview', desc: '全貌——貢獻圖、agent 額度與進度、即時 session、模型佔比、連續紀錄。' },
@@ -386,18 +386,18 @@ const zhTw: typeof en = {
     go: '到 GitHub 看 ↗',
     items: [
       {
-        name: 'tokcat',
-        who: 'by handlecusion',
-        href: 'https://github.com/handlecusion/tokcat',
-        body: 'TokenBar fork 自的原版 macOS 選單列 token 監視器。Tauri 外殼、原生 tray、奔跑的選單列貓都從這裡來。',
-        accent: '--p-anthropic',
-      },
-      {
         name: 'tokscale',
         who: 'by Junho Yeo',
         href: 'https://github.com/junhoyeo/tokscale',
-        body: '它的 tokscale-core crate 驅動 TokenBar 的多 agent session 解析、去重與計價。多視圖儀表板的靈感來自 tokscale 的 TUI。',
+        body: '整個專案的地基。vendored 的 tokscale-core crate 驅動 TokenBar 跨 25+ agent 的 session 解析、去重與計價——而它的互動式 TUI 更是整套儀表板的藍本：六種透鏡，連同 In · Out · CR · CW 的欄位拆解，都照著它來。',
         accent: '--p-deepseek',
+      },
+      {
+        name: 'tokcat',
+        who: 'by handlecusion',
+        href: 'https://github.com/handlecusion/tokcat',
+        body: 'TokenBar 產品線的起點——原版的 Tauri 選單列監視器（它自己也建立在 tokscale 之上）。原生版是從零的 Swift 重寫、不含任何 tokcat 程式碼，但選單列的形態與奔跑貓的招牌創意都來自這裡。',
+        accent: '--p-anthropic',
       },
       {
         name: 'RunCat',

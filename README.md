@@ -91,11 +91,18 @@ make run    # build + run the smoke binary
 
 ## Credits
 
-TokenBar began as a fork of [tokcat](https://github.com/handlecusion/tokcat) by
-handlecusion (the spinning-cat idea is theirs, tracing to
-[RunCat](https://kyome.io/runcat/) by Takuto Nakamura). Parsing and pricing come
-from [tokscale](https://github.com/junhoyeo/tokscale) by Junho Yeo. The menu-bar
-shell patterns reference [CodexBar](https://github.com/steipete/CodexBar) by
-Peter Steinberger. All MIT.
+TokenBar is built on **[tokscale](https://github.com/junhoyeo/tokscale)** by
+Junho Yeo. Its vendored `tokscale-core` crate does the session parsing, dedup,
+and pricing across 25+ agents — and its interactive TUI is the blueprint for the
+whole dashboard: the six lenses (Overview, Models, Daily, Hourly, Stats, Agents)
+and their `In · Out · CR · CW` column breakdown are modeled on it.
 
-Licensed under [MIT](LICENSE).
+The product line began as a fork of
+[tokcat](https://github.com/handlecusion/tokcat) by handlecusion — the original
+Tauri menu-bar monitor (itself built on tokscale). This native app is a
+ground-up Swift rewrite that carries no tokcat code, but the menu-bar form and
+the spinning-cat signature are theirs; the cat traces back to
+[RunCat](https://kyome.io/runcat/) by Takuto Nakamura. The quota-pace cards
+reference [CodexBar](https://github.com/steipete/CodexBar) by Peter Steinberger.
+
+All MIT. Licensed under [MIT](LICENSE).
