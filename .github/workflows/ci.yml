@@ -1,9 +1,13 @@
 name: CI
 
+# The app build/test pipeline. Skips landing-only changes — those have their
+# own pages.yml deploy and don't touch the Rust/Swift app.
 on:
   push:
     branches: [main]
+    paths-ignore: ['landing/**']
   pull_request:
+    paths-ignore: ['landing/**']
 
 jobs:
   build:
