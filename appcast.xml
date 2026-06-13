@@ -3,34 +3,32 @@
   <channel>
     <title>TokenBar updates</title>
     <item>
-      <title>1.0.2</title>
-      <pubDate>Fri, 12 Jun 2026 16:47:06 +0000</pubDate>
-      <sparkle:version>103</sparkle:version>
-      <sparkle:shortVersionString>1.0.2</sparkle:shortVersionString>
+      <title>1.0.3</title>
+      <pubDate>Sat, 13 Jun 2026 20:15:38 +0000</pubDate>
+      <sparkle:version>116</sparkle:version>
+      <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
 
-      <link>https://github.com/Nanako0129/TokenBar/releases/tag/v1.0.2</link>
+      <link>https://github.com/Nanako0129/TokenBar/releases/tag/v1.0.3</link>
       <description><![CDATA[
 <b>New:</b>
 <ul>
-<li>Bring back the dashboard year filter</li>
-<li>Standalone settings window with live preview column</li>
+<li>TokenBar now tracks token usage from Claude's Cowork local agent mode transcripts.</li>
 </ul>
-<b>Performance:</b>
+<b>Improved:</b>
 <ul>
-<li>Stop re-reading and re-aggregating unchanged session history on every tick — much lower CPU and memory on large histories</li>
+<li>Reduced memory usage and CPU load when scanning large chat histories, preventing periodic memory spikes.</li>
 </ul>
 <b>Fixes:</b>
 <ul>
-<li>Open the settings window dead-center on screen</li>
-<li>Never mtime-prune Hermes/Zed dbs; probe their -wal sidecars</li>
+<li>Prevents duplicate messages from different AI tools from being counted multiple times.</li>
 </ul>
 <p>Thanks: @aiexkwan</p>
       ]]></description>
       <enclosure
-        url="https://github.com/Nanako0129/TokenBar/releases/download/v1.0.2/TokenBar.app.tar.gz"
-        sparkle:edSignature="NCuCR9wuvOcPbGacYTsMnacwLZjQ9BDwMB1p2xcVOfCr96mKdZ0Be0MbyECjD54QfcVU66SJDzkHYs98ZXlJCA=="
-        length="6664853"
+        url="https://github.com/Nanako0129/TokenBar/releases/download/v1.0.3/TokenBar.app.tar.gz"
+        sparkle:edSignature="uX/xXtv/TW/X+oGHJFxEJrlC9FUtyTEQLdyVJ97bkrCyRz+EeGYMCwMYH+qb7zwtSIEXPku2EApH1i/J2HO+DQ=="
+        length="6792638"
         type="application/octet-stream"/>
     </item>
   </channel>
