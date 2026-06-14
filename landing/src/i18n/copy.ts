@@ -63,9 +63,9 @@ const en = {
     h2: 'The cat spins faster<br />the more you burn.',
     body: "Your token throughput as a single glanceable critter: idle when nothing's flowing, whirling when Claude Code is mid-refactor. One look at the menu bar tells you how fast the meter is running — no window required.",
     credit:
-      'The spinning cat is the signature creative touch of the original <a href="https://github.com/handlecusion/tokcat">tokcat</a> by <strong>handlecusion</strong> — kept here with gratitude. The running menu-bar pet itself began with <a href="https://kyome.io/runcat/">RunCat</a> by <strong>Takuto Nakamura</strong>.',
-    crittersNote: 'also on the roster — hover to feed them tokens',
-    gifAlt: "The TokenBar menu-bar cat spinning beside today's cost",
+      'The menu-bar pet, a critter that animates faster the harder you work it, is the invention of <a href="https://kyome.io/runcat/">RunCat</a> by <strong>Takuto Nakamura</strong>, and Party Parrot comes from there too. <a href="https://github.com/handlecusion/tokcat">tokcat</a> by <strong>handlecusion</strong> brought the idea to token tracking and made the oiiai spinning cat its signature. TokenBar began as a tokcat fork and reuses both, kept with gratitude.',
+    crittersNote: 'oiiai cat from tokcat, Party Parrot from RunCat. Hover to feed them tokens.',
+    gifAlt: "The oiiai cat spinning in the menu bar beside today's cost",
   },
   quota: {
     eyebrow: 'The menu bar is the dashboard',
@@ -187,14 +187,14 @@ const en = {
         name: 'tokcat',
         who: 'by handlecusion',
         href: 'https://github.com/handlecusion/tokcat',
-        body: 'Where TokenBar’s product line began — the original Tauri menu-bar monitor (itself built on tokscale). The native app is a ground-up Swift rewrite that carries no tokcat code, but the menu-bar form and the spinning-cat signature are theirs.',
+        body: 'Where TokenBar’s product line began — the original Tauri menu-bar monitor (itself built on tokscale). The native app is a ground-up Swift rewrite that carries no tokcat code, but the menu-bar pet form and the oiiai spinning-cat signature are theirs.',
         accent: '--p-anthropic',
       },
       {
         name: 'RunCat',
         who: 'by Takuto Nakamura',
         href: 'https://kyome.io/runcat/',
-        body: 'The original running menu-bar pet. Every cat that has ever sprinted across a Mac menu bar — tokcat’s and TokenBar’s included — traces back here.',
+        body: 'The original menu-bar pet, the creature that runs faster the busier you are. Party Parrot, and every critter that has sprinted across a Mac menu bar (tokcat’s and TokenBar’s included), traces back here.',
         accent: '--p-cursor',
       },
       {
@@ -216,7 +216,7 @@ const en = {
 
 const zhTw: typeof en = {
   meta: {
-    title: 'TokenBar — 在 macOS 選單列追蹤 Claude Code／Codex 的 token 用量',
+    title: 'TokenBar｜在 macOS 選單列追蹤 Claude Code／Codex 的 token 用量',
     description:
       '免費開源的選單列 App，直接讀本機紀錄追蹤 25+ 個 AI 編碼 agent 的花費——Claude Code、Codex、Cursor、OpenCode 等。即時吞吐、額度儀錶、3D 用量圖。原生 Swift、Liquid Glass、零遙測。',
     ogLocale: 'zh_TW',
@@ -269,12 +269,12 @@ const zhTw: typeof en = {
   },
   cat: {
     eyebrow: '儀錶，不是吉祥物',
-    h2: '燒得越快，<br />貓跑得越快。',
-    body: '你的 token 吞吐量濃縮成選單列上一隻一眼可讀的小生物：沒事時發呆，Claude Code 重構到一半時狂奔。瞄一眼選單列就知道錶轉多快——不用開任何視窗。',
+    h2: '燒得越快，<br />貓轉得越快。',
+    body: '你的 token 吞吐量濃縮成選單列上一隻一眼可讀的小生物：沒事時發呆，Claude Code 重構到一半時狂轉。瞄一眼選單列就知道錶轉多快——不用開任何視窗。',
     credit:
-      '奔跑的貓是原版 <a href="https://github.com/handlecusion/tokcat">tokcat</a>（<strong>handlecusion</strong>）的招牌創意，這裡心懷感激地保留。而選單列奔跑寵物的始祖，是 <strong>Takuto Nakamura</strong> 的 <a href="https://kyome.io/runcat/">RunCat</a>。',
-    crittersNote: '陣容裡還有這兩位——滑過去餵牠們一點 token',
-    gifAlt: 'TokenBar 選單列的貓在今日花費旁奔跑',
+      '選單列養寵物（動得多快反映你操得多兇）這個設計，源自 <strong>Takuto Nakamura</strong> 的 <a href="https://kyome.io/runcat/">RunCat</a>，party parrot 也是從這裡來的。<a href="https://github.com/handlecusion/tokcat">tokcat</a>（<strong>handlecusion</strong>）把它帶進 token 用量監視，並以 oiiai 旋轉貓當招牌。TokenBar 最初是 tokcat 的 fork，oiiai 貓與 party parrot 都心懷感激地沿用。',
+    crittersNote: 'oiiai 旋轉貓來自 tokcat，party parrot 來自 RunCat。滑過去餵牠們一點 token。',
+    gifAlt: 'oiiai 旋轉貓在選單列今日花費旁打轉',
   },
   quota: {
     eyebrow: '選單列就是儀表板',
@@ -396,14 +396,14 @@ const zhTw: typeof en = {
         name: 'tokcat',
         who: 'by handlecusion',
         href: 'https://github.com/handlecusion/tokcat',
-        body: 'TokenBar 產品線的起點——原版的 Tauri 選單列監視器（它自己也建立在 tokscale 之上）。原生版是從零的 Swift 重寫、不含任何 tokcat 程式碼，但選單列的形態與奔跑貓的招牌創意都來自這裡。',
+        body: 'TokenBar 產品線的起點——原版的 Tauri 選單列監視器（它自己也建立在 tokscale 之上）。原生版是從零的 Swift 重寫、不含任何 tokcat 程式碼，但選單列寵物的形態與 oiiai 旋轉貓的招牌創意都來自這裡。',
         accent: '--p-anthropic',
       },
       {
         name: 'RunCat',
         who: 'by Takuto Nakamura',
         href: 'https://kyome.io/runcat/',
-        body: '選單列奔跑寵物的始祖。每一隻在 Mac 選單列上衝刺過的貓——包括 tokcat 的和 TokenBar 的——都可以追溯到這裡。',
+        body: '選單列養寵物（動得多快反映你多忙）這個設計的始祖。party parrot、以及每一隻在 Mac 選單列上衝刺過的貓（tokcat 的和 TokenBar 的都算），都可以追溯到這裡。',
         accent: '--p-cursor',
       },
       {
