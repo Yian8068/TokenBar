@@ -5,8 +5,10 @@ import TokenBarCore
 /// Popover root: view-switch row + lens router over a shared DashboardModel.
 /// Per-client tabs join in a later phase.
 struct PopoverView: View {
-    /// Set by the status-item controller from the screen size.
-    var popoverHeight: CGFloat = 480
+    /// Owns the popover's size; the drag handle below writes its height.
+    @EnvironmentObject private var chrome: PopoverChrome
+    /// Height at the start of the active resize drag (global-space gesture).
+    @State private var dragBase: CGFloat?
 
     @State private var model = DashboardModel()
     @State private var tokensPerMin: Double?
@@ -58,10 +60,11 @@ struct PopoverView: View {
             Divider()
             footer
         }
-        .frame(width: 360, height: popoverHeight)
+        .frame(width: chrome.width, height: chrome.height)
         .animation(.easeOut(duration: 0.16), value: activeViewRaw)
         .animation(.easeOut(duration: 0.16), value: activeTab)
         .background(PopoverBackdrop().ignoresSafeArea())
+        .overlay(alignment: .bottom) { resizeHandle }
         .task { await model.load() }
         .task(id: activeViewRaw) {
             await model.ensureData(for: activeView.wrappedValue)
@@ -303,6 +306,39 @@ struct PopoverView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
+    }
+
+    // MARK: - Resize handle
+
+    /// Bottom-edge grabber: drag to set the popover height. Lives in the empty
+    /// center of the footer strip (the buttons hug the edges) so it never
+    /// steals their clicks. Global coordinate space keeps the drag stable as
+    /// the popover grows under the pointer.
+    private var resizeHandle: some View {
+        Capsule()
+            .fill(Color.primary.opacity(0.18))
+            .frame(width: 36, height: 4)
+            .frame(width: 90, height: 14) // larger hit target
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 1, coordinateSpace: .global)
+                    .onChanged { value in
+                        let base = dragBase ?? chrome.height
+                        dragBase = base
+                        chrome.setHeight(
+                            base + value.translation.height, persist: false, live: true)
+                    }
+                    .onEnded { value in
+                        let base = dragBase ?? chrome.height
+                        chrome.setHeight(
+                            base + value.translation.height, persist: true, live: false)
+                        dragBase = nil
+                    }
+            )
+            .onHover { inside in
+                if inside { NSCursor.resizeUpDown.push() } else { NSCursor.pop() }
+            }
+            .help("Drag to resize the popover height")
     }
 
     // MARK: - Keyboard shortcuts

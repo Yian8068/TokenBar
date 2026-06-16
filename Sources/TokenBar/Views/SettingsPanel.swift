@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import TokenBarCore
 
@@ -21,6 +22,9 @@ struct SettingsPanel: View {
     @AppStorage("tokenbar.limits.layout") private var layoutRaw = LimitsLayout.full.rawValue
     @AppStorage("tokenbar.trace.detailed") private var detailedTrace = false
     @AppStorage("tokenbar.refresh.intervalMin") private var refreshIntervalMin = 30
+    /// 0 = auto (≈60% of the screen). The popover's drag handle writes the
+    /// same key, so the two stay in sync.
+    @AppStorage(PopoverChrome.heightKey) private var popoverHeight = 0.0
 
     static let refreshIntervalOptions = [1, 5, 15, 30, 60]
 
@@ -87,6 +91,36 @@ struct SettingsPanel: View {
                 hint("Affects the live-session card only: on, each agent & model gets its own row; off, rows collapse to one per app.")
             }
 
+            section("Popover size") {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Height")
+                            .font(.caption)
+                        Spacer()
+                        Text("\(Int(popoverHeightBinding.wrappedValue.rounded())) pt")
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                        if popoverHeight > 0 {
+                            Button("Auto") { popoverHeight = 0 }
+                                .controlSize(.mini)
+                                .buttonStyle(.plain)
+                                .font(.caption2)
+                                .foregroundStyle(.tint)
+                                .help("Fit the height to the screen automatically")
+                        }
+                    }
+                    Slider(
+                        value: popoverHeightBinding,
+                        in: Double(PopoverChrome.minHeight)...popoverHeightMax,
+                        step: 10)
+                        .controlSize(.small)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+                .glassCard(cornerRadius: 8)
+                hint("Or drag the handle at the bottom edge of the popover. Width is fixed; \"Auto\" fits about 60% of your screen height.")
+            }
+
             section("Data refresh") {
                 radioGroup(
                     selection: Binding(
@@ -123,6 +157,24 @@ struct SettingsPanel: View {
 
     private var isAnimatedStyle: Bool {
         animationStyle == "cat" || animationStyle == "parrot"
+    }
+
+    /// Shows the resolved auto height while 0 (auto), the chosen value once set.
+    private var popoverHeightBinding: Binding<Double> {
+        Binding(
+            get: {
+                popoverHeight > 0
+                    ? popoverHeight
+                    : Double(PopoverChrome.autoHeight(
+                        visibleHeight: NSScreen.main?.visibleFrame.height ?? 900))
+            },
+            set: { popoverHeight = $0 })
+    }
+
+    /// Slider ceiling: the screen the settings window is on (the controller
+    /// re-clamps to the popover's actual screen on open anyway).
+    private var popoverHeightMax: Double {
+        Double(max(700, (NSScreen.main?.visibleFrame.height ?? 1000) - 24))
     }
 
     /// Auto + every window the latest quota snapshot knows about.

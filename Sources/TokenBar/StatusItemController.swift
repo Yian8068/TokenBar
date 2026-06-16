@@ -9,6 +9,9 @@ import TokenBarCore
 final class StatusItemController: NSObject {
     private let statusItem: NSStatusItem
     private let popover: NSPopover
+    /// Source of truth for the popover's (user-adjustable) height.
+    let chrome = PopoverChrome()
+    private var defaultsObserver: NSObjectProtocol?
 
     override init() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -16,15 +19,28 @@ final class StatusItemController: NSObject {
         super.init()
 
         popover.behavior = .transient
-        // Size to the screen: ~60% of the visible height reads much better
-        // on tall displays than the original fixed 480pt.
-        let height = max(480, ((NSScreen.main?.visibleFrame.height ?? 900) * 0.6).rounded())
-        popover.contentSize = NSSize(width: 360, height: height)
-        let host = NSHostingController(rootView: PopoverView(popoverHeight: height))
+        let host = NSHostingController(rootView: PopoverView().environmentObject(chrome))
         // The SwiftUI root has a fixed frame; let the popover keep our size
-        // instead of chasing intrinsic-size updates.
+        // instead of chasing intrinsic-size updates. The real size is set per
+        // open in showPopover() against the status item's actual screen.
         host.sizingOptions = []
+        popover.contentSize = NSSize(width: chrome.width, height: chrome.minHeight)
         popover.contentViewController = host
+
+        // The chrome model drives the popover window from three inputs: the
+        // bottom drag handle, the settings slider, and the screen-size resolve.
+        chrome.onResize = { [weak popover] height, live in
+            guard let popover else { return }
+            popover.animates = !live // 1:1 tracking mid-drag; animate otherwise
+            popover.contentSize = NSSize(width: PopoverChrome.width, height: height)
+        }
+        // The settings window's slider writes the height default from another
+        // window — mirror it onto a live popover.
+        defaultsObserver = NotificationCenter.default.addObserver(
+            forName: UserDefaults.didChangeNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.chrome.reloadFromDefaults() }
+        }
 
         if let button = statusItem.button {
             button.image = NSImage(
@@ -85,6 +101,10 @@ final class StatusItemController: NSObject {
 
     func showPopover() {
         guard !popover.isShown, let button = statusItem.button else { return }
+        // Size against the screen the status item actually lives on (reliable,
+        // unlike NSScreen.main at launch with no key window) every time we open.
+        let visible = (button.window?.screen ?? NSScreen.main)?.visibleFrame.height ?? 900
+        chrome.resolve(visibleHeight: visible)
         // Accessory apps are never frontmost; activate so the transient
         // popover gets key status and closes on outside clicks.
         NSApp.activate(ignoringOtherApps: true)
