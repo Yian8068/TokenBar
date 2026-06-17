@@ -3,24 +3,23 @@
   <channel>
     <title>TokenBar updates</title>
     <item>
-      <title>1.0.5</title>
-      <pubDate>Wed, 17 Jun 2026 06:16:43 +0000</pubDate>
-      <sparkle:version>133</sparkle:version>
-      <sparkle:shortVersionString>1.0.5</sparkle:shortVersionString>
+      <title>1.0.6</title>
+      <pubDate>Wed, 17 Jun 2026 10:32:02 +0000</pubDate>
+      <sparkle:version>135</sparkle:version>
+      <sparkle:shortVersionString>1.0.6</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
 
-      <link>https://github.com/Nanako0129/TokenBar/releases/tag/v1.0.5</link>
+      <link>https://github.com/Nanako0129/TokenBar/releases/tag/v1.0.6</link>
       <description><![CDATA[
 <b>Fixes:</b>
 <ul>
-<li>The usage graph in the menu bar popover now refreshes automatically, showing current data without reopening.</li>
-<li>Scrollbars inside the popover stay as subtle overlays and no longer shift the content when they appear.</li>
+<li>Fixed a bug that caused agent token usage reports to sometimes display inaccurate counts due to duplicate streaming data</li>
 </ul>
       ]]></description>
       <enclosure
-        url="https://github.com/Nanako0129/TokenBar/releases/download/v1.0.5/TokenBar.app.tar.gz"
-        sparkle:edSignature="UIgmjJCLazYxOZlEwr4PQnvlE9nngruOjGCjNKlxRbzAhAptU8TXKIkgabZm0KuIq+mVasnyqbG33Yb7VP9uBA=="
-        length="6822817"
+        url="https://github.com/Nanako0129/TokenBar/releases/download/v1.0.6/TokenBar.app.tar.gz"
+        sparkle:edSignature="n+xLf02WjvFgnZnTD4AQDQWCgO0cQcNPB/ZkudQO1zxFfzk9JL7WzoK5TTqTyCS/k2A5SOubG+Z+G4dliFecCA=="
+        length="6790932"
         type="application/octet-stream"/>
     </item>
   </channel>
