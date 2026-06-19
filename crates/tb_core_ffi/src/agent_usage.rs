@@ -368,8 +368,18 @@ static CLAUDE_USAGE_GATE: Mutex<ClaudeUsageGate> = Mutex::new(ClaudeUsageGate {
     last_good: None,
 });
 
+/// Lock the gate, recovering from a poisoned mutex instead of panicking. A
+/// panic in one locked section must not wedge the 429 gate (and take down the
+/// whole `tb_agent_usage` call) for the rest of the process — same stance as
+/// the live-tail lock in lib.rs.
+fn lock_gate() -> std::sync::MutexGuard<'static, ClaudeUsageGate> {
+    CLAUDE_USAGE_GATE
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner())
+}
+
 fn claude_gate_blocked_until(now: DateTime<Utc>) -> Option<DateTime<Utc>> {
-    let mut gate = CLAUDE_USAGE_GATE.lock().unwrap();
+    let mut gate = lock_gate();
     match gate.blocked_until {
         Some(until) if until > now => Some(until),
         Some(_) => {
@@ -384,11 +394,11 @@ fn claude_gate_record_rate_limit(retry_after: Option<DateTime<Utc>>, now: DateTi
     let blocked_until = retry_after
         .filter(|until| *until > now)
         .unwrap_or_else(|| now + chrono::Duration::minutes(5));
-    CLAUDE_USAGE_GATE.lock().unwrap().blocked_until = Some(blocked_until);
+    lock_gate().blocked_until = Some(blocked_until);
 }
 
 fn claude_gate_record_success(snapshot: &AgentUsageSnapshot) {
-    let mut gate = CLAUDE_USAGE_GATE.lock().unwrap();
+    let mut gate = lock_gate();
     gate.blocked_until = None;
     gate.last_good = Some(snapshot.clone());
 }
@@ -396,7 +406,7 @@ fn claude_gate_record_success(snapshot: &AgentUsageSnapshot) {
 /// While the gate is closed, prefer the cached snapshot (its `updated_at`
 /// stays honest); with nothing cached yet, surface a countdown error.
 fn claude_gate_fallback(blocked_until: DateTime<Utc>, now: DateTime<Utc>) -> AgentUsageSnapshot {
-    if let Some(snapshot) = CLAUDE_USAGE_GATE.lock().unwrap().last_good.clone() {
+    if let Some(snapshot) = lock_gate().last_good.clone() {
         return snapshot;
     }
     let wait_secs = (blocked_until - now).num_seconds().max(0);
