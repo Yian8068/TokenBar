@@ -1,0 +1,15 @@
+New:
+- Claude limits now work with setup-token / CLAUDE_CODE_OAUTH_TOKEN. When the usage endpoint is scope-blocked (403 user:profile), TokenBar reads your Session (5h) and Weekly (7d) windows from Anthropic's rate-limit response headers, and picks the token up from your environment or Keychain. Thanks @sayre4ux (#26).
+
+Accuracy — parsing engine caught up to tokscale v4.0.7:
+- MiMo Code usage now parses at all (it was reading empty).
+- Codex: fixed a ~50% token under-count on same-millisecond forks.
+- GitHub Copilot: sub-agents are now attributed separately instead of collapsing into one bucket.
+- Recovered dropped spend for gjc and Pi (messages with no provider field were skipped).
+- Fixed provider bucketing and pricing across OpenCode, Kilo, Mux, Antigravity and Jcode.
+- fable-5 is now priced correctly instead of resolving to "unknown".
+- More accurate "active days" and average-per-day.
+
+Fixes:
+- Refreshed every agent brand icon: fixed 4 wrong and 2 broken ones, and added marks for 8 that showed a plain letter disc.
+- Homebrew: silenced the depends_on macos: deprecation warning. Thanks @yiskang (#23).
