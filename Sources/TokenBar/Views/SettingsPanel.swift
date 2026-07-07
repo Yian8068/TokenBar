@@ -8,6 +8,8 @@ import TokenBarCore
 struct SettingsPanel: View {
     /// For the quota-source picker (the windows currently known).
     var agentUsage: AgentUsagePayload?
+    /// Clients detected in the current usage payload; this powers the tab filter.
+    var presentClients: [String] = []
 
     @AppStorage(TrayMode.storageKey) private var trayModeRaw = TrayMode.todayTokens.rawValue
     @AppStorage(TrayAnimator.animateKey) private var animateTray = true
@@ -25,6 +27,7 @@ struct SettingsPanel: View {
     /// 0 = auto (≈60% of the screen). The popover's drag handle writes the
     /// same key, so the two stay in sync.
     @AppStorage(PopoverChrome.heightKey) private var popoverHeight = 0.0
+    @AppStorage(ClientTabVisibility.storageKey) private var hiddenClientsRaw = ""
 
     static let refreshIntervalOptions = [1, 5, 15, 30, 60]
 
@@ -69,6 +72,28 @@ struct SettingsPanel: View {
             section("Quota source") {
                 radioGroup(selection: $quotaSource, options: quotaSourceOptions)
                 hint("Feeds the gauge icons and the \"Quota left\" title. Auto follows whichever window is closest to running out.")
+            }
+
+            section("Dashboard tools") {
+                if presentClients.isEmpty {
+                    Text("Tools appear here after TokenBar sees them in your usage data.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .glassCard(cornerRadius: 8)
+                } else {
+                    VStack(spacing: 1) {
+                        ForEach(presentClients, id: \.self) { id in
+                            inlineToggleRow(
+                                ClientRegistry.style(id).displayName,
+                                isOn: visibleClientBinding(for: id))
+                        }
+                    }
+                    .glassCard(cornerRadius: 8)
+                }
+                hint("Overview is always shown. This list is built from the tools detected in the current usage data, not from a separate saved client list.")
             }
 
             section("Agent limits") {
@@ -191,6 +216,24 @@ struct SettingsPanel: View {
         return options
     }
 
+    private var hiddenClientIds: Set<String> {
+        ClientTabVisibility.hiddenClientIds(from: hiddenClientsRaw)
+    }
+
+    private func visibleClientBinding(for id: String) -> Binding<Bool> {
+        Binding(
+            get: { !hiddenClientIds.contains(id) },
+            set: { isVisible in
+                var hidden = hiddenClientIds
+                if isVisible {
+                    hidden.remove(id)
+                } else {
+                    hidden.insert(id)
+                }
+                hiddenClientsRaw = ClientTabVisibility.rawValue(forHidden: hidden)
+            })
+    }
+
     // MARK: - Building blocks
 
     private func section(_ label: String, @ViewBuilder content: () -> some View) -> some View {
@@ -221,6 +264,20 @@ struct SettingsPanel: View {
                 .controlSize(.mini)
                 .labelsHidden()
         }
+    }
+
+    private func inlineToggleRow(_ label: String, isOn: Binding<Bool>) -> some View {
+        HStack {
+            Text(label)
+                .font(.caption)
+            Spacer()
+            Toggle("", isOn: isOn)
+                .toggleStyle(.switch)
+                .controlSize(.mini)
+                .labelsHidden()
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 7)
     }
 
     private func radioGroup(
