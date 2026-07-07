@@ -17,7 +17,9 @@ struct SettingsWindowView: View {
     var body: some View {
         HStack(spacing: 0) {
             ScrollView {
-                SettingsPanel(agentUsage: model.agentUsage)
+                SettingsPanel(
+                    agentUsage: model.agentUsage,
+                    presentClients: model.stats?.presentClients ?? [])
                     .padding(14)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(OverlayScrollerEnforcer())

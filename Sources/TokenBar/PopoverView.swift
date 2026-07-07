@@ -22,6 +22,7 @@ struct PopoverView: View {
     @AppStorage("tokenbar.chart.view") private var chartViewRaw = "2d"
     @AppStorage("tokenbar.view") private var activeViewRaw = AppView.overview.rawValue
     @AppStorage("tokenbar.bridge.dismissed") private var bridgeDismissed = false
+    @AppStorage(ClientTabVisibility.storageKey) private var hiddenClientTabsRaw = ""
     /// "overview" or a client id. Persisted so the selection survives the
     /// popover's rootView teardown/rebuild cycle (StatusItemController swaps
     /// the live view for a placeholder on close).
@@ -43,9 +44,9 @@ struct PopoverView: View {
             if BridgeBuild.isActive && !bridgeDismissed {
                 bridgeBanner
             }
-            if let stats = model.stats, stats.presentClients.count > 1 {
+            if showsTabRow {
                 DashboardTabs(
-                    clients: stats.presentClients, active: $activeTab,
+                    clients: visiblePresentClients, active: $activeTab,
                     kbdHints: cmdHeld)
                     .padding(.horizontal, 12)
                     .padding(.bottom, 8)
@@ -99,11 +100,8 @@ struct PopoverView: View {
         // when only one client is present), so a saved client id that no longer
         // exists can't strand the dashboard on an empty single-client slice
         // with no visible tab row to return to Overview.
-        .onChange(of: model.stats?.presentClients) { _, clients in
-            if activeTab != "overview", let clients, !clients.contains(activeTab) {
-                activeTab = "overview"
-            }
-        }
+        .onChange(of: model.stats?.presentClients) { _, _ in normalizeActiveTab() }
+        .onChange(of: hiddenClientTabsRaw) { _, _ in normalizeActiveTab() }
     }
 
     // MARK: - Sections
@@ -272,12 +270,10 @@ struct PopoverView: View {
     }
 
     @ViewBuilder private var lensContent: some View {
-        if let payload = model.payload, let stats = model.stats {
+        if let payload = model.payload, model.stats != nil {
             let singleClient = activeTab == "overview" ? nil : activeTab
-            let clientIds = singleClient.map { [$0] } ?? stats.presentClients
-            let activeStats = singleClient == nil
-                ? stats
-                : UsageStats(payload: payload, selectedClients: Set(clientIds))
+            let clientIds = singleClient.map { [$0] } ?? visiblePresentClients
+            let activeStats = UsageStats(payload: payload, selectedClients: Set(clientIds))
             switch activeView.wrappedValue {
             case .overview:
                 OverviewView(
@@ -415,7 +411,7 @@ struct PopoverView: View {
         guard mods == .command, let chars = event.charactersIgnoringModifiers?.lowercased()
         else { return false }
 
-        let tabs = ["overview"] + (model.stats?.presentClients ?? [])
+        let tabs = ["overview"] + visiblePresentClients
         switch chars {
         case "1", "2", "3", "4", "5", "6", "7", "8", "9":
             let index = Int(chars)! - 1
@@ -454,6 +450,26 @@ struct PopoverView: View {
             cmdHintTask?.cancel()
             cmdHintTask = nil
             cmdHeld = false
+        }
+    }
+
+    private var presentClients: [String] {
+        model.stats?.presentClients ?? []
+    }
+
+    private var visiblePresentClients: [String] {
+        ClientTabVisibility.visibleClients(
+            from: presentClients, hiddenRaw: hiddenClientTabsRaw)
+    }
+
+    private var showsTabRow: Bool {
+        visiblePresentClients.count > 1
+            || (visiblePresentClients.count == 1 && presentClients.count > 1)
+    }
+
+    private func normalizeActiveTab() {
+        if activeTab != "overview", !visiblePresentClients.contains(activeTab) {
+            activeTab = "overview"
         }
     }
 
